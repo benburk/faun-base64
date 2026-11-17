@@ -1,4 +1,4 @@
-# faun-base64
+# base64
 
 Base64 for [Faun](https://github.com/benburk/faun-lang), as RFC 4648
 writes it: bytes to text and back, with the standard or URL-safe alphabet,
@@ -19,7 +19,7 @@ have written, a newline included, is `Err(Malformed)`.
 
 ## Using it
 
-Each [release](https://github.com/benburk/faun-base64/releases)'s notes give
+Each [release](https://github.com/benburk/base64/releases)'s notes give
 the line to add to your package's `uses`.
 
 ## Releasing
