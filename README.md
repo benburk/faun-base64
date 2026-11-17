@@ -1,6 +1,6 @@
 # base64
 
-Base64 for [Faun](https://github.com/faun-lang/faun-lang), as RFC 4648
+Base64 for [Faun](https://github.com/faun-lang/faun), as RFC 4648
 writes it: bytes to text and back, with the standard or URL-safe alphabet,
 padded or not.
 
