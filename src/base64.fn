@@ -70,7 +70,7 @@ decoded(text, url) -> (
 # Up to three bytes as one number, the first in the highest eight of its
 # twenty-four bits.
 joined : List(U8) -> Nat
-joined(group) -> [0, 1, 2].fold(0, |n, at| n.shift_left(8).or(group.get_or(at, 0).to_nat()))
+joined(group) -> [0, 1, 2].fold(0, |n, at| n.shift_left(8).or(group.get(at).ok_or(0).to_nat()))
 
 # The first `count` of the four six-bit symbols that `n`'s twenty-four bits
 # write.
@@ -103,7 +103,7 @@ value(_, _) -> Err(Malformed)
 # The first `count` bytes that up to four six-bit values write.
 bytes : (List(Nat), Nat) -> List(U8)
 bytes(values, count) -> (
-  n = [0, 1, 2, 3].fold(0, |n, at| n.shift_left(6).or(values.get_or(at, 0)))
+  n = [0, 1, 2, 3].fold(0, |n, at| n.shift_left(6).or(values.get(at).ok_or(0)))
   [16, 8, 0].take(count).map(|shift| U8.of_nat(n.shift_right(shift).and(255)))
 )
 
