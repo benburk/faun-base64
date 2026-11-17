@@ -1,0 +1,30 @@
+# Bundles the library on every version tag, `vMAJOR.MINOR.PATCH`, and publishes the
+# bundle on that tag's release. A Faun package depends on it by the
+# bundle's URL, which names it by its hash and holds the tag's version.
+name: Release
+
+on:
+  push:
+    tags: ["v*.*.*"]
+
+permissions:
+  contents: write
+
+jobs:
+  bundle:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: ./.github/actions/faun
+      - run: faun test src/base64.fn
+      - id: bundle
+        run: |
+          faun bundle src/base64.fn -o dist
+          echo "file=$(ls dist)" >> "$GITHUB_OUTPUT"
+      - env:
+          GH_TOKEN: ${{ github.token }}
+          URL: https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/${{ steps.bundle.outputs.file }}
+        run: |
+          printf 'Depend on this release with:\n\n```ruby\npackage {\n  uses: {base64: "%s"},\n}\n```\n' "$URL" > notes.md
+          gh release create "$GITHUB_REF_NAME" dist/*.tar.zst --title "$GITHUB_REF_NAME" --notes-file notes.md
+          cat notes.md >> "$GITHUB_STEP_SUMMARY"
